@@ -1,0 +1,2 @@
+./moneysim_agent_per_level_qbert/sim2017-01-23_18_36_final_moneysim.txt.0.0_notsafe.txt,eps 0.00
+./moneysim_agent_per_level_qbert/sim2017-01-23_18_36_final_moneysim.txt.0.05_notsafe.txt,eps 0.05

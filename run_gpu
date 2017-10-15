@@ -1,0 +1,317 @@
+#!/bin/bash
+echo "Hello, type your name please:"
+read NAME
+echo "Hey $NAME, I will guide you through this running script. My name is SISI"
+echo "-------------------"
+echo "1. Please provide the name of the game, default game is <qbert>"
+read ENV
+if [ -z "$ENV" ]
+  then ENV="qbert"
+fi
+echo "Thanks for choosing: $ENV"
+echo "-------------------"
+echo "2. Do you want to switch level **1** color? if yes, to which level? (1 to 5) . default is <1>"
+#read LVL1COLOR
+if [ -z "$LVL1COLOR" ]
+  then LVL1COLOR=1
+fi
+echo "2. Do you want to switch level **2** color? if yes, to which level? (1 to 5) . default is <2>"
+#read LVL2COLOR
+if [ -z "$LVL2COLOR" ]
+  then LVL2COLOR=2
+fi
+echo "2. Do you want to switch level **3** color? if yes, to which level? (1 to 5) . default is <3>"
+#read LVL3COLOR
+if [ -z "$LVL3COLOR" ]
+  then LVL3COLOR=3
+fi
+echo "2. Do you want to switch level **4** color? if yes, to which level? (1 to 5) . default is <4>"
+#read LVL4COLOR
+if [ -z "$LVL4COLOR" ]
+  then LVL4COLOR=4
+fi
+echo "2. Do you want to switch level **5** color? if yes, to which level? (1 to 5) . default is <5>"
+#read LVL5COLOR
+if [ -z "$LVL5COLOR" ]
+  then LVL5COLOR=5
+fi
+echo "-------------------"
+echo "3. Do you want to hide score pixels? 1 is yes , 0 is no , default is <0>"
+#read HIDE_SCORE_PXLS_SI
+if [ -z "$HIDE_SCORE_PXLS_SI" ]
+  then HIDE_SCORE_PXLS_SI=0
+fi
+echo "Thanks for choosing: $HIDE_SCORE_PXLS_SI"
+echo "-------------------"
+echo "4. How many agents do you want default is <1>"
+read AGENTSNUM
+if [ -z "$AGENTSNUM" ]
+  then AGENTSNUM=1
+fi
+echo "-------------------"
+echo "2. Which agent do you want to learn level **1** ? (1 to $AGENTSNUM) default is <1>"
+#read LVL1AGENT
+if [ -z "$LVL1AGENT" ]
+  then LVL1AGENT=1
+fi
+echo "2. Which agent do you want to learn level **2** ? (1 to $AGENTSNUM) default is <1>"
+#read LVL2AGENT
+if [ -z "$LVL2AGENT" ]
+  then LVL2AGENT=1
+fi
+echo "2. Which agent do you want to learn level **3** ? (1 to $AGENTSNUM) default is <1>"
+#read LVL3AGENT
+if [ -z "$LVL3AGENT" ]
+  then LVL3AGENT=1
+fi
+echo "2. Which agent do you want to learn level **4** ? (1 to $AGENTSNUM) default is <1>"
+#read LVL4AGENT
+if [ -z "$LVL4AGENT" ]
+  then LVL4AGENT=1
+fi
+echo "2. Which agent do you want to learn level **5** which is any other level ? (1 to $AGENTSNUM) default is <1>"
+#read LVL5AGENT
+if [ -z "$LVL5AGENT" ]
+  then LVL5AGENT=1
+fi
+echo "2. Which agent do you want to learn level **6** ? (1 to $AGENTSNUM) default is <1>"
+#read LVL6AGENT
+if [ -z "$LVL6AGENT" ]
+  then LVL6AGENT=1
+fi
+echo "2. Which agent do you want to learn level **7** which is the level between levels ? (1 to $AGENTSNUM) default is <1>"
+#read LVL7AGENT
+if [ -z "$LVL7AGENT" ]
+  then LVL7AGENT=1
+fi
+echo "-------------------"
+echo "-------------------"
+echo "2. Do you want to learn level 1? if your answer is smaller than 1, it wont learn the level and use your answer as epsilon, else (=1) it will learn default is <1> which is learn the level"
+#read LVL1LEARN
+if [ -z "$LVL1LEARN" ]
+  then LVL1LEARN=1
+fi
+echo "2. Do you want to learn level 2? if your answer is smaller than 1, it wont learn the level and use your answer as epsilon, else (=1) it will learn default is <1> which is learn the level"
+#read LVL2LEARN
+if [ -z "$LVL2LEARN" ]
+  then LVL2LEARN=1
+fi
+echo "2. Do you want to learn level 3? if your answer is smaller than 1, it wont learn the level and use your answer as epsilon, else (=1) it will learn default is <1> which is learn the level"
+#read LVL3LEARN
+if [ -z "$LVL3LEARN" ]
+  then LVL3LEARN=1
+fi
+echo "2. Do you want to learn level 4? if your answer smaller than 1, it wont learn the level and use your answer as epsilon, else (=1) it will learn default is <1> which is learn the level"
+#read LVL4LEARN
+if [ -z "$LVL4LEARN" ]
+  then LVL4LEARN=1
+fi
+echo "2. Do you want to learn level 5? if your answer smaller than 1, it wont learn the level and use your answer as epsilon, else (=1) it will learn default is <1> which is learn the level"
+#read LVL5LEARN
+if [ -z "$LVL5LEARN" ]
+  then LVL5LEARN=1
+fi
+echo "2. Do you want to learn level 6? if your answer smaller than 1, it wont learn the level and use your answer as epsilon, else (=1) it will learn default is <1> which is learn the level"
+#read LVL6LEARN
+if [ -z "$LVL6LEARN" ]
+  then LVL6LEARN=1
+fi
+echo "2. Do you want to learn level 7? if your answer smaller than 1, it wont learn the level and use your answer as epsilon, else (=1) it will learn default is <1> which is learn the level"
+#read LVL7LEARN
+if [ -z "$LVL7LEARN" ]
+  then LVL7LEARN=1
+fi
+
+echo "-------------------"
+declare -a agents_nets
+for agent_idx in `seq 1 7`; do
+  agents_nets[$agent_idx]="NO_NETWORK"
+done
+for agent_idx in `seq 1 $AGENTSNUM`; do
+  echo "For agent: $agent_idx , do you want to load network? (default - dont load network)"
+  net_idx=1
+  declare -a nets_arr
+  nets_arr[0]="NO_NETWORK"
+  for netfi in $( ls ./dqn | grep .t7 ); do
+    echo $net_idx: $netfi
+    nets_arr[$net_idx]=$netfi
+    net_idx=$((net_idx + 1))
+  done
+  read chosen_net
+  if [ -z "$chosen_net" ]
+    then chosen_net=0
+  fi
+  echo "Chosen! ${nets_arr[$chosen_net]}"
+  agents_nets[$agent_idx]=${nets_arr[$chosen_net]}
+  echo "Chosen network is.... ${agents_nets[$agent_idx]}"
+done
+echo "-------------------"
+declare -a agents_epsstart
+for agent_idx in `seq 1 7`; do
+  agents_epsstart[$agent_idx]=1
+done
+for agent_idx in `seq 1 $AGENTSNUM`; do
+  echo "56. For agent: $agent_idx , choose epsilon start (default <1>)"
+  read chosen_eps
+  if [ -z "$chosen_eps" ]
+    then chosen_eps=1
+  fi
+  agents_epsstart[$agent_idx]=$chosen_eps
+  echo "Chosen epsilon for agent $agent_idx is.... ${agents_epsstart[$agent_idx]}"
+done
+
+echo "4. What about replay memory ? how big do you want it (per agent!) default is 1000000/$AGENTSNUM which is $((1000000/$AGENTSNUM))"
+read replay_memory
+if [ -z "$replay_memory" ]
+  then replay_memory=$((1000000/$AGENTSNUM))
+fi
+echo "Chosen size is $replay_memory"
+echo "-------------------"
+echo "5. Do you want to split agents 1 is yes , 0 is no <default is 0>"
+#read si_split_agents
+if [ -z "$si_split_agents" ]
+  then si_split_agents=0
+fi
+echo "-------------------"
+echo "-------------------"
+echo "6. Do you want to have skills in the networks? 1 is yes , 0 is no <default is 0>"
+#read si_skillplay
+if [ -z "$si_skillplay" ]
+  then si_skillplay=0
+fi
+echo "-------------------"
+
+echo "-------------------"
+echo "6. Do you want to play the new game? 1 is yes , 0 is no <default is 0>"
+#read si_ngame
+if [ -z "$si_ngame" ]
+  then si_ngame=0
+fi
+echo "-------------------"
+
+
+
+echo "-------------------"
+echo "7. Which gpu do you want to use? (0 for both or 1 or 2) <default is 0>"
+#read gpu
+if [ -z "$gpu" ]
+  then gpu=0
+fi
+echo "Chosen is gpu $gpu"
+echo "-------------------"
+
+
+echo "-------------------"
+echo "-------------------"
+echo "-------------------"
+echo "--  EVALUATION ----"
+echo "-------------------"
+echo "-------------------"
+echo "5. Choose epsilon for evaluation <default is 0.05 >"
+read eval_epsilon
+if [ -z "$eval_epsilon" ]
+  then eval_epsilon=0.05
+fi
+
+echo "-------------------"
+
+echo "5. Do you want evaluation only mode? if yes, write the number of evaluation <default is 0 - not only evaluation>"
+read eval_only_num
+if [ -z "$eval_only_num" ]
+  then eval_only_num=0
+fi
+if [ "$eval_only_num" = 0 ]; then
+        echo "I will learn and do evaluation"
+else
+        echo "You choose evaluation mode, setting replay memory to 1000"
+        replay_memory=1000
+        echo "Chosen size for replay memory is $replay_memory"
+fi
+echo "-------------------"
+echo "-------------------"
+
+
+echo "5. If you dont want logs and you want to see prints on the screen write dont"
+read dont_store_logs
+if [ "$dont_store_logs" = "dont" ]; then
+        debug_prints_val=1
+else
+        debug_prints_val=0
+fi
+
+
+FRAMEWORK="alewrap"
+
+game_path=$PWD"/roms/"
+env_params="useRGB=true"
+agent="NeuralQLearner"
+n_replay=1
+netfile="\"convnet_atari3\""
+update_freq=4
+actrep=4
+discount=0.99
+seed=1
+learn_start=50000
+pool_frms_type="\"max\""
+pool_frms_size=2
+initial_priority="false"
+#replay_memory=140000
+eps_start=1
+eps_end=0.1
+eps_endt=replay_memory
+lr=0.00025
+agent_type="DQN3_0_1"
+preproc_net="\"net_downsample_2x_full_y\""
+agent_name=$agent_type"_"$1"_FULL_Y"
+state_dim=7056
+ncols=1
+#agent_params="lr="$lr",ep="$eps_start",ep_end="$eps_end",ep_endt="$eps_endt",discount="$discount",hist_len=4,learn_start="$learn_start",replay_memory="$replay_memory",update_freq="$update_freq",n_replay="$n_replay",network="$netfile",preproc="$preproc_net",state_dim="$state_dim",minibatch_size=32,rescale_r=1,ncols="$ncols",bufferSize=512,valid_size=500,target_q=10000,clip_delta=1,min_reward=-1,max_reward=1"
+agent_params="lr="$lr",ep_end="$eps_end",ep_endt="$eps_endt",discount="$discount",hist_len=4,learn_start="$learn_start",replay_memory="$replay_memory",update_freq="$update_freq",n_replay="$n_replay",network="$netfile",preproc="$preproc_net",state_dim="$state_dim",minibatch_size=32,rescale_r=1,ncols="$ncols",bufferSize=512,valid_size=500,target_q=10000,clip_delta=1,min_reward=-1,max_reward=1"
+steps=50000000
+eval_freq=250000
+eval_steps=125000
+prog_freq=10000
+save_freq=125000
+#gpu=0
+random_starts=30
+pool_frms="type="$pool_frms_type",size="$pool_frms_size
+num_threads=4
+
+args="-framework $FRAMEWORK -game_path $game_path -name $agent_name -env $ENV -AGENT1EPSSTART ${agents_epsstart[1]} -AGENT2EPSSTART ${agents_epsstart[2]} -AGENT3EPSSTART ${agents_epsstart[3]} -AGENT4EPSSTART ${agents_epsstart[4]} -AGENT5EPSSTART ${agents_epsstart[5]} -AGENT6EPSSTART ${agents_epsstart[6]} -AGENT7EPSSTART ${agents_epsstart[7]} -AGENT1NET ${agents_nets[1]} -AGENT2NET ${agents_nets[2]} -AGENT3NET ${agents_nets[3]} -AGENT4NET ${agents_nets[4]} -AGENT5NET ${agents_nets[5]} -AGENT6NET ${agents_nets[6]} -AGENT7NET ${agents_nets[7]} -LVL1AGENT $LVL1AGENT -LVL2AGENT $LVL2AGENT -LVL3AGENT $LVL3AGENT -LVL4AGENT $LVL4AGENT -LVL5AGENT $LVL5AGENT -LVL6AGENT $LVL6AGENT -LVL7AGENT $LVL7AGENT -LVL1LEARN $LVL1LEARN -LVL2LEARN $LVL2LEARN -LVL3LEARN $LVL3LEARN -LVL4LEARN $LVL4LEARN -LVL5LEARN $LVL5LEARN -LVL6LEARN $LVL6LEARN -LVL7LEARN $LVL7LEARN -LVL1COLOR $LVL1COLOR -LVL2COLOR $LVL2COLOR -LVL3COLOR $LVL3COLOR -LVL4COLOR $LVL4COLOR -LVL5COLOR $LVL5COLOR -EVAL_EPS $eval_epsilon -EVAL_ONLY_NUM $eval_only_num -debug_prints $debug_prints_val -env_params $env_params -agent $agent -agent_params $agent_params -steps $steps -eval_freq $eval_freq -eval_steps $eval_steps -prog_freq $prog_freq -save_freq $save_freq -actrep $actrep -gpu $gpu -random_starts $random_starts -pool_frms $pool_frms -seed $seed -threads $num_threads -num_of_agents_param $AGENTSNUM -SI_SPLIT $si_split_agents -skillplay $si_skillplay -play_newgame $si_ngame -hide_score_pxls $HIDE_SCORE_PXLS_SI"
+echo $args
+timestampvar=`date +%Y-%m-%d_%H_%M`
+filename="sim${timestampvar}.txt"
+echo "" > ./logs/$filename
+echo "args are $args" >> ./logs/$filename
+echo "ENV is $ENV" >> ./logs/$filename
+echo "LVL1COLOR is $LVL1COLOR" >> ./logs/$filename
+echo "LVL2COLOR is $LVL2COLOR" >> ./logs/$filename
+echo "LVL3COLOR is $LVL3COLOR" >> ./logs/$filename
+echo "LVL4COLOR is $LVL4COLOR" >> ./logs/$filename
+echo "HIDE_SCORE_PXLS_SI is $HIDE_SCORE_PXLS_SI" >> ./logs/$filename
+echo "AGENTSNUM is $AGENTSNUM" >> ./logs/$filename
+echo "LVL1AGENT is $LVL1AGENT" >> ./logs/$filename
+echo "LVL2AGENT is $LVL2AGENT" >> ./logs/$filename
+echo "LVL3AGENT is $LVL3AGENT" >> ./logs/$filename
+echo "LVL4AGENT is $LVL4AGENT" >> ./logs/$filename
+echo "LVL5AGENT is $LVL5AGENT" >> ./logs/$filename
+echo "LVL7AGENT is $LVL7AGENT" >> ./logs/$filename
+
+echo "AGENT1EPSSTART is ${agents_epsstart[1]}" >> ./logs/$filename
+echo "AGENT2EPSSTART is ${agents_epsstart[2]}" >> ./logs/$filename
+echo "AGENT3EPSSTART is ${agents_epsstart[3]}" >> ./logs/$filename
+echo "AGENT4EPSSTART is ${agents_epsstart[4]}" >> ./logs/$filename
+echo "AGENT5EPSSTART is ${agents_epsstart[5]}" >> ./logs/$filename
+echo "AGENT6EPSSTART is ${agents_epsstart[6]}" >> ./logs/$filename
+echo "AGENT7EPSSTART is ${agents_epsstart[7]}" >> ./logs/$filename
+
+echo "replay_memory is $replay_memory" >> ./logs/$filename
+for agent_idx in `seq 1 7`; do
+  echo "Chosen network for agent ${agent_idx} is.... ${agents_nets[$agent_idx]}" >> ./logs/$filename
+done
+cd dqn
+if [ "$dont_store_logs" = "dont" ]; then
+        qlua train_agent.lua $args
+else
+        qlua train_agent.lua $args >> ../logs/$filename
+fi

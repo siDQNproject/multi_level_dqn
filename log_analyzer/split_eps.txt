@@ -1,0 +1,107 @@
+#!/bin/bash
+
+search_safe_eps=`grep use_safe_eps $1`
+search_softmax=`grep pow7 $1`
+search_smarteps=`grep agents_use_smart_eps_string_vals $1`
+search_eval_idx=`grep eval_in_eval_idx $1`
+
+#echo $search_safe_eps
+if [ "$search_eval_idx" != "" ]; then
+    echo "Eval idx"
+    echo "Searching for eval_in_eval_idx: 1"
+    cat $1 | grep -e 'eval_in_eval_idx: 1' > $1.eval1.txt
+
+    echo "Searching for eval_in_eval_idx: 2"
+    cat $1 | grep -e 'eval_in_eval_idx: 2' > $1.eval2.txt
+
+    echo "Searching for eval_in_eval_idx: 3"
+    cat $1 | grep -e 'eval_in_eval_idx: 3' > $1.eval3.txt
+
+    echo "Searching for eval_in_eval_idx: 4"
+    cat $1 | grep -e 'eval_in_eval_idx: 4' > $1.eval4.txt
+
+    echo "Searching for eval_in_eval_idx: 5"
+    cat $1 | grep -e 'eval_in_eval_idx: 5' > $1.eval5.txt
+
+elif [ "$search_safe_eps" != "" ]; then
+    echo “Searching for 0.10 notsafe”
+    cat $1 | grep -e 'current_eval_eps:\s0.1' | grep -e 'use_safe_eps:\sfalse' > $1.0.10_notsafe.txt
+
+    echo “Searching for 0.05 notsafe”
+    cat $1 | grep -e 'current_eval_eps:\s0.05' | grep -e 'use_safe_eps:\sfalse' > $1.0.05_notsafe.txt
+
+    echo “Searching for 0.03 notsafe”
+    cat $1 | grep -e 'current_eval_eps:\s0.03' | grep -e 'use_safe_eps:\sfalse' > $1.0.03_notsafe.txt
+
+    echo “Searching for 0.01 notsafe”
+    cat $1 | grep -e 'current_eval_eps:\s0.01' | grep -e 'use_safe_eps:\sfalse' > $1.0.01_notsafe.txt
+
+    echo “Searching for 0 notsafe”
+    cat $1 | grep -e 'current_eval_eps:\s0\s' | grep -e 'use_safe_eps:\sfalse' > $1.0.0_notsafe.txt
+
+    echo “Searching for 0.10 safe”
+    cat $1 | grep -e 'current_eval_eps:\s0.1' | grep -e 'use_safe_eps:\strue' > $1.0.10_safeeps.txt
+
+    echo “Searching for 0.05 safe”
+    cat $1 | grep -e 'current_eval_eps:\s0.05' | grep -e 'use_safe_eps:\strue' > $1.0.05_safeeps.txt
+
+    echo “Searching for 0.03 safe”
+    cat $1 | grep -e 'current_eval_eps:\s0.03' | grep -e 'use_safe_eps:\strue' > $1.0.03_safeeps.txt
+
+    echo “Searching for 0.01 safe”
+    cat $1 | grep -e 'current_eval_eps:\s0.01' | grep -e 'use_safe_eps:\strue' > $1.0.01_safeeps.txt
+
+    echo “Searching for 0 safe”
+    cat $1 | grep -e 'current_eval_eps:\s0\s' | grep -e 'use_safe_eps:\strue' > $1.0.0_safeeps.txt
+
+elif [ "$search_smarteps" != "" ]; then
+    echo "SMART EPS"
+    echo “Searching for agents_use_smart_eps_string_vals\[1\]=true ”
+    cat $1 | grep -e 'agents_use_smart_eps_string_vals\[1\]=true' | grep -e 'agents_smart_eps_choice_type_vals\[1\]=safeeps_nloest' | grep -e 'current_eval_eps:\s0.05' > $1.0.05_smart_3lowest.txt
+
+
+    echo “Searching for agents_use_smart_eps_string_vals\[1\]=true ”
+    cat $1 | grep -e 'agents_use_smart_eps_string_vals\[1\]=true' | grep -e 'agents_smart_eps_choice_type_vals\[1\]=safeeps_nloest' | grep -e 'current_eval_eps:\s0.1' > $1.0.10_smart_3lowest.txt
+
+    echo “Searching for agents_use_smart_eps_string_vals\[1\]=false ”
+    cat $1 | grep -e 'agents_use_smart_eps_string_vals\[1\]=false' | grep -e 'current_eval_eps:\s0.05' > $1.0.05_notsmart.txt
+
+    echo “Searching for agents_use_smart_eps_string_vals\[1\]=true softmax exp ”
+    cat $1 | grep -e 'agents_use_smart_eps_string_vals\[1\]=true' | grep -e 'agents_smart_eps_choice_type_vals\[1\]=softmax_exp1' | grep -e 'current_eval_eps:\s0.1' > $1.0.10_smart_exp1.txt
+
+elif [ "$search_softmax" != "" ]; then
+    echo “Searching for linear softmax”
+    cat $1 | grep -e 'use_safe_eps:\slinear' > $1_linear.txt
+    
+    echo “Searching for pow3 softmax”
+    cat $1 | grep -e 'use_safe_eps:\slinear' > $1_pow3.txt
+    
+    echo “Searching for pow7 softmax”
+    cat $1 | grep -e 'use_safe_eps:\spow7' > $1_pow7.txt
+    
+    echo “Searching for exp1 softmax”
+    cat $1 | grep -e 'use_safe_eps:\sexp1' > $1_exp1.txt
+    
+    echo “Searching for normalized_exp softmax”
+    cat $1 | grep -e 'use_safe_eps:\snormalized_exp' > $1_normalized_exp.txt
+    
+
+else
+    echo “Searching for 0.10”
+    cat $1 | grep -e 'current_eval_eps:\s0.1' > $1.0.10_notsafe.txt
+
+    echo “Searching for 0.05”
+    cat $1 | grep -e 'current_eval_eps:\s0.05' > $1.0.05_notsafe.txt
+
+    echo “Searching for 0.03”
+    cat $1 | grep -e 'current_eval_eps:\s0.03' > $1.0.03_notsafe.txt
+
+    echo “Searching for 0.01”
+    cat $1 | grep -e 'current_eval_eps:\s0.01' > $1.0.01_notsafe.txt
+
+    echo “Searching for 0”
+    cat $1 | grep -e 'current_eval_eps:\s0\s' > $1.0.0_notsafe.txt
+fi
+
+
+#
